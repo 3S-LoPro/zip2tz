@@ -73,6 +73,25 @@ Covers all 50 US states plus DC, including:
 - Indiana's complex county-level timezone boundaries
 - North Dakota's split counties
 
+## Data Accuracy
+
+This library provides timezone mappings on a **best-effort basis**. While we strive for accuracy, we make no guarantees that the data is complete or correct. Timezone boundaries can be complex (especially in states like Indiana and Arizona), and zip codes occasionally span multiple timezones.
+
+If you find an incorrect mapping or missing zip code, please [open an issue](https://github.com/3S-LoPro/zip2tz/issues) with:
+- The zip code in question
+- The expected timezone
+- A source for the correct mapping (if available)
+
+## Contributing
+
+Contributions are welcome! If you'd like to improve the data or code:
+
+1. Fork the repository
+2. Make your changes
+3. Open a pull request
+
+For data corrections, please include a reliable source for the timezone mapping.
+
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
