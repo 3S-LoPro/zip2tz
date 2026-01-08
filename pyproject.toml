@@ -1,6 +1,6 @@
 [project]
 name = "zip2tz"
-version = "0.1.0"
+version = "0.1.1"
 description = "A simple timezone lookup by zip code"
 readme = "README.md"
 authors = [

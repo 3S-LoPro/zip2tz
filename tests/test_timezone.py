@@ -127,6 +127,10 @@ class TestArizona:
         """Phoenix - Mountain Standard (no DST)."""
         assert zip2tz.timezone("85001") == "America/Phoenix"
 
+    def test_phoenix_metro(self) -> None:
+        """Phoenix metro area (Queen Creek) - Mountain Standard (no DST)."""
+        assert zip2tz.timezone("85142") == "America/Phoenix"
+
     def test_tucson(self) -> None:
         """Tucson - Mountain Standard (no DST)."""
         assert zip2tz.timezone("85701") == "America/Phoenix"
