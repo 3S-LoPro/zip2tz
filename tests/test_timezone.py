@@ -3,6 +3,7 @@
 import pytest
 
 import zip2tz
+from zip2tz._data import TIMEZONES
 
 
 class TestStringInput:
@@ -171,8 +172,6 @@ class TestAllTimezones:
 
     def test_timezone_format(self) -> None:
         """All timezones should be in IANA format (contain '/')."""
-        from zip2tz._data import TIMEZONES
-        
         for tz in TIMEZONES:
             assert "/" in tz, f"Invalid timezone format: {tz}"
             assert tz.startswith(("America/", "Pacific/")), f"Unexpected timezone: {tz}"
