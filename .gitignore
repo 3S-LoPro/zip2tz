@@ -9,8 +9,10 @@ wheels/
 # Virtual environments
 .venv
 
-# Source data (not shipped, keep private)
-/data/
+# Source data (not shipped in the package)
+/data/*
+!/data/coordinate_overrides.json
 
 # Internal scripts for data processing
-/scripts/
+/scripts/*
+!/scripts/compile_data.py

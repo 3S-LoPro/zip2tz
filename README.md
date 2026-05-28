@@ -1,97 +1,109 @@
-# zip2tz
+# zip2info
 
-Fast, zero-dependency US zip code to timezone lookup for Python.
+Fast, zero-dependency US ZIP code lookups for Python.
 
 - **38,000+ zip codes** mapped to IANA timezones
+- **Geocoordinates** for ZIP centroids (latitude/longitude)
 - **Zero dependencies** — pure Python, works everywhere
 - **O(1) lookup** — instant hash table lookups, no database or file I/O
-- **Tiny footprint** — ~100KB installed, loads in milliseconds
 - **Type-annotated** — full type hints included
 
 ## Installation
 
 ```bash
-pip install zip2tz
+pip install zip2info
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add zip2tz
+uv add zip2info
 ```
 
 ## Usage
 
 ```python
-import zip2tz
+import zip2info
 
-# Get timezone for a zip code
-tz = zip2tz.timezone("90210")
+# Timezone lookup
+tz = zip2info.timezone("90210")
 print(tz)  # America/Los_Angeles
 
-tz = zip2tz.timezone("10001")
-print(tz)  # America/New_York
+# Coordinate lookup (latitude, longitude)
+coords = zip2info.coordinates("90210")
+print(coords)  # (34.0901, -118.4065)
+
+# Rich metadata
+record = zip2info.info("10001")
+print(record.timezone)   # America/New_York
+print(record.latitude)   # 40.7484
+print(record.longitude)  # -73.9967
 
 # Works with integers too
-tz = zip2tz.timezone(60601)
+tz = zip2info.timezone(60601)
 print(tz)  # America/Chicago
 
 # Returns None if zip code not found
-tz = zip2tz.timezone("00000")
+tz = zip2info.timezone("00000")
 print(tz)  # None
 ```
-
-## Why zip2tz?
-
-Most timezone lookup libraries require external databases, network calls, or heavy dependencies. `zip2tz` bakes the data directly into Python bytecode — just import and go.
-
-| Feature | zip2tz | Other libraries |
-|---------|--------|-----------------|
-| Dependencies | 0 | Often requires `pytz`, databases, or APIs |
-| Lookup speed | O(1) hash | Varies (file I/O, network, etc.) |
-| Install size | ~100KB | Often MB+ |
-| Offline | Yes | Sometimes requires network |
 
 ## API
 
 ### `timezone(zipcode: str | int) -> str | None`
 
-Returns the IANA timezone string (e.g., `"America/New_York"`) for the given US zip code, or `None` if not found.
+Returns the IANA timezone string for a US ZIP code.
 
-**Parameters:**
-- `zipcode` — A 5-digit US zip code as a string or integer
+### `coordinates(zipcode: str | int) -> tuple[float, float] | None`
 
-**Returns:**
-- IANA timezone string, or `None` if the zip code is not in the database
+Returns `(latitude, longitude)` for a US ZIP code, or `None` if unavailable.
+
+### `info(zipcode: str | int) -> ZipInfo | None`
+
+Returns a `ZipInfo` dataclass with `zipcode`, `timezone`, `latitude`, and `longitude`.
+Returns `None` when timezone or coordinate data is unavailable.
+
+## Data sources
+
+- **Timezones**: bundled US ZIP-to-timezone dataset (same coverage as the original `zip2tz` project)
+- **Coordinates** (merged in priority order):
+  1. [GeoNames](https://www.geonames.org/) US postal codes ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+  2. U.S. Census ZCTA gazetteer centroids (public domain)
+  3. Manual overrides in `data/coordinate_overrides.json`
+  4. 3-digit ZIP prefix centroid fallback for remaining USPS-only ZIPs (PO boxes, unique entity codes, etc.)
+
+Regenerate packaged data with:
+
+```bash
+python scripts/compile_data.py
+```
+
+## Migration from zip2tz
+
+`zip2info` is a new PyPI package and import path. Existing `zip2tz` installs are unchanged.
+
+```python
+# before
+import zip2tz
+zip2tz.timezone("90210")
+
+# after
+import zip2info
+zip2info.timezone("90210")
+```
 
 ## Coverage
 
-Covers all 50 US states plus DC, including:
-- All continental US timezones
-- Alaska (9 timezones)
-- Hawaii
-- Indiana's complex county-level timezone boundaries
-- North Dakota's split counties
+Covers all 50 US states plus DC, including Alaska, Hawaii, Indiana county-level boundaries, and other edge cases.
 
-## Data Accuracy
+## Data accuracy
 
-This library provides timezone mappings on a **best-effort basis**. While we strive for accuracy, we make no guarantees that the data is complete or correct. Timezone boundaries can be complex (especially in states like Indiana and Arizona), and zip codes occasionally span multiple timezones.
+Timezone and coordinate mappings are provided on a **best-effort basis**. ZIP codes can span multiple timezones or areas, and coordinate points are centroids/estimates rather than exact address locations.
 
-If you find an incorrect mapping or missing zip code, please [open an issue](https://github.com/3S-LoPro/zip2tz/issues) with:
-- The zip code in question
-- The expected timezone
-- A source for the correct mapping (if available)
-
-## Contributing
-
-Contributions are welcome! If you'd like to improve the data or code:
-
-1. Fork the repository
-2. Make your changes
-3. Open a pull request
-
-For data corrections, please include a reliable source for the timezone mapping.
+If you find incorrect data, please open an issue with the ZIP code, expected value, and a source if available.
 
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
+
+Coordinate data includes GeoNames material licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

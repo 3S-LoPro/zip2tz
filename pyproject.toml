@@ -1,7 +1,7 @@
 [project]
-name = "zip2tz"
-version = "0.1.7"
-description = "A simple timezone lookup by zip code"
+name = "zip2info"
+version = "1.0.0"
+description = "Fast US ZIP code lookups for timezone and geocoordinates"
 readme = "README.md"
 authors = [
     { name = "kylehogate", email = "kyle.holgate@gmail.com" }
@@ -23,4 +23,3 @@ exclude = [
 dev = [
     "pytest>=8.4.2",
 ]
-
