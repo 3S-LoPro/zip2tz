@@ -1,6 +1,6 @@
 [project]
 name = "zip2info"
-version = "1.0.0"
+version = "1.0.1"
 description = "Fast US ZIP code lookups for timezone and geocoordinates"
 readme = "README.md"
 authors = [
